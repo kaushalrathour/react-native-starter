@@ -30,17 +30,16 @@ async function run() {
     await execa('npx', initArgs, { cwd: cwd, stdio: 'inherit' });
 
     // Step 2: Remove files/folders to override
+    console.log(chalk.cyan('🔧 Setting up custom template files...'));
     const toRemove = ['App.tsx', 'README.md', 'babel.config.js', 'assets', 'src'];
     for (const item of toRemove) {
       const targetPath = path.join(appPath, item);
       if (await fs.pathExists(targetPath)) {
-        console.log(chalk.yellow(`🗑 Removing ${item}...`));
         await fs.remove(targetPath);
       }
     }
 
     // Step 3: Copy files from overrides/
-    console.log(chalk.cyan('📂 Copying custom files from overrides/...'));
     await fs.copy(templateDir, appPath, { overwrite: true, recursive: true });
 
     // Step 4: Install dependency groups
@@ -67,14 +66,13 @@ async function run() {
       'react-redux',
     ];
 
-    console.log(chalk.green(`📦 Installing group 1 dependencies...`));
+    console.log(chalk.green(`📦 Installing UI & utility dependencies: ${group1.join(', ')}...`));
     await execa('npm', ['install', ...group1], { cwd: appPath, stdio: 'inherit' });
 
-    console.log(chalk.green(`📦 Installing group 2 dependencies...`));
+    console.log(chalk.green(`📦 Installing navigation dependencies: ${group2.join(', ')}...`));
     await execa('npm', ['install', ...group2], { cwd: appPath, stdio: 'inherit' });
 
-    // Install group3 dependencies
-    console.log(chalk.green(`📦 Installing group 3 dependencies...`));
+    console.log(chalk.green(`📦 Installing state management dependencies: ${group3.join(', ')}...`));
     await execa('npm', ['install', ...group3], { cwd: appPath, stdio: 'inherit' });
 
     // Step 5: Append fonts.gradle line
