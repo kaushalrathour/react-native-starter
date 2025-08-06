@@ -1,0 +1,25 @@
+{
+  "name": "@kaushalrathour/react-native-starter",
+  "version": "1.0.0",
+  "description": "Bootstrap a custom React Native app with predefined template and dependencies",
+  "bin": {
+    "create-rn-starter": "./bin/index.js"
+  },
+  "files": [
+    "bin",
+    "overrides"
+  ],
+  "keywords": [
+    "react-native",
+    "bootstrap",
+    "cli",
+    "template"
+  ],
+  "author": "Kaushal",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.3.0"
+  }
+}
