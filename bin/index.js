@@ -14,9 +14,8 @@ async function run() {
     process.exit(1);
   }
 
-  const cwd = process.cwd(); // This is rn-template
-  const parentDir = path.dirname(cwd); // This is Desktop (or wherever rn-template is)
-  const appPath = path.join(parentDir, appName);
+  const cwd = process.cwd(); // Current working directory where command is run
+  const appPath = path.join(cwd, appName);
   const templateDir = path.resolve(__dirname, '../overrides');
 
   try {
@@ -28,7 +27,7 @@ async function run() {
       initArgs.push('--package-name', packageName);
     }
 
-    await execa('npx', initArgs, { cwd: parentDir, stdio: 'inherit' });
+    await execa('npx', initArgs, { cwd: cwd, stdio: 'inherit' });
 
     // Step 2: Remove files/folders to override
     const toRemove = ['App.tsx', 'README.md', 'babel.config.js', 'assets', 'src'];
