@@ -42,6 +42,27 @@ async function run() {
     // Step 3: Copy files from overrides/
     await fs.copy(templateDir, appPath, { overwrite: true, recursive: true });
 
+    // Step 3.5: Merge package.json scripts
+    console.log(chalk.cyan('📝 Adding comprehensive npm scripts...'));
+    const packageJsonPath = path.join(appPath, 'package.json');
+    const scriptsTemplatePath = path.join(templateDir, 'package.json.template');
+    
+    if (await fs.pathExists(packageJsonPath) && await fs.pathExists(scriptsTemplatePath)) {
+      const packageJson = await fs.readJson(packageJsonPath);
+      const scriptsTemplate = await fs.readJson(scriptsTemplatePath);
+      
+      // Replace {{APP_NAME}} placeholder with actual app name
+      let scriptsTemplateStr = JSON.stringify(scriptsTemplate);
+      scriptsTemplateStr = scriptsTemplateStr.replace(/{{APP_NAME}}/g, appName);
+      const processedScriptsTemplate = JSON.parse(scriptsTemplateStr);
+      
+      // Merge scripts, keeping existing ones and adding new ones
+      packageJson.scripts = { ...packageJson.scripts, ...processedScriptsTemplate.scripts };
+      
+      await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
+      console.log(chalk.green('✅ Added comprehensive npm scripts to package.json'));
+    }
+
     // Step 4: Install dependency groups
     const group1 = [
       '@react-native-async-storage/async-storage',

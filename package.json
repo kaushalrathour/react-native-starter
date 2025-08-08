@@ -8,7 +8,8 @@
   "files": [
     "bin",
     "overrides",
-    "README.md"
+    "README.md",
+    "SCRIPTS.md"
   ],
   "scripts": {
     "test": "echo \"No tests specified\" && exit 0",
