@@ -55,7 +55,7 @@ async function run() {
       '@react-navigation/native',
       '@react-navigation/stack',
       'react-native-gesture-handler',
-      'react-native-reanimated',
+      'react-native-reanimated@3.19.0',
       'react-native-safe-area-context',
       'react-native-screens',
     ];
@@ -94,19 +94,61 @@ async function run() {
 
     console.log(chalk.green(`\n✅ Project '${appName}' is ready! 🚀`));
 
-    // Show the full path and directory contents
-    console.log(chalk.cyan(`\nProject directory: ${appPath}`));
+    // Change to project directory
+    process.chdir(appPath);
+    console.log(chalk.cyan(`\n📁 Changed to project directory: ${appName}`));
+    
     const dirContents = await fs.readdir(appPath);
     console.log(chalk.cyan('Project contents:'));
     dirContents.forEach(item => console.log('  -', item));
 
+    // Prompt for CocoaPods installation on macOS
+    const os = require('os');
+    if (os.platform() === 'darwin') {
+      console.log(chalk.yellow('\n🍎 Detected macOS - iOS development available'));
+      
+      // Simple prompt using readline
+      const readline = require('readline');
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      const installPods = await new Promise((resolve) => {
+        rl.question(chalk.cyan('📱 Install CocoaPods dependencies now? (y/N): '), (answer) => {
+          rl.close();
+          resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes');
+        });
+      });
+      
+      if (installPods) {
+        try {
+          console.log(chalk.cyan('\n📦 Installing CocoaPods dependencies...'));
+          await execa('npx', ['pod-install'], { cwd: appPath, stdio: 'inherit' });
+          console.log(chalk.green('✅ CocoaPods installation completed!'));
+        } catch (error) {
+          console.log(chalk.red('❌ CocoaPods installation failed. You can run it manually later:'));
+          console.log(chalk.yellow('npx pod-install'));
+        }
+      }
+    }
+
     // Provide user instructions
-    console.log(chalk.yellow(`\nNext steps:`));
-    console.log(chalk.yellow(`1. cd ${appPath}`));
-    console.log(chalk.yellow(`2. For iOS, run: npx pod-install`));
-    console.log(chalk.yellow(`3. To run on iOS: npx react-native run-ios`));
-    console.log(chalk.yellow(`4. To run on Android: npx react-native run-android`));
-    console.log(chalk.gray(`\nNote: For iOS, make sure you have CocoaPods installed. If not, install it with 'sudo gem install cocoapods'.`));
+    console.log(chalk.yellow(`\n🚀 Next steps:`));
+    if (os.platform() !== 'darwin') {
+      console.log(chalk.yellow(`1. For iOS (macOS only): npx pod-install`));
+      console.log(chalk.yellow(`2. To run on iOS: npx react-native run-ios`));
+      console.log(chalk.yellow(`3. To run on Android: npx react-native run-android`));
+    } else {
+      console.log(chalk.yellow(`1. To run on iOS: npx react-native run-ios`));
+      console.log(chalk.yellow(`2. To run on Android: npx react-native run-android`));
+    }
+    
+    console.log(chalk.cyan(`\n📋 Troubleshooting Pod Install Issues:`));
+    console.log(chalk.gray(`If you encounter 'RNWorklets' dependency errors during pod install:`));
+    console.log(chalk.gray(`• This template uses react-native-reanimated@3.19.0 to avoid compatibility issues`));
+    console.log(chalk.gray(`• If errors persist, try: cd ios && pod install --repo-update`));
+    console.log(chalk.gray(`• For other dependency conflicts, check: https://github.com/software-mansion/react-native-reanimated/issues`));
   } catch (err) {
     console.error(chalk.red('❌ An error occurred:'), err);
     process.exit(1);

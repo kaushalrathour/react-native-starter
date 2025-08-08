@@ -3,7 +3,7 @@
 **Skip the boring setup. Start building amazing apps instantly!**
 
 [![npm version](https://badge.fury.io/js/%40kaushalrathour%2Freact-native-starter.svg)](https://badge.fury.io/js/%40kaushalrathour%2Freact-native-starter)
-[![Downloads](https://img.shields.io/npm/dm/@kaushalrathour/react-native-starter.svg)](https://www.npmjs.com/package/@kaushalrathour/react-native-starter)
+[![Downloads](https://img.shields.io/npm/dm/@kaushalrathour/react-native-starter.svg)](https://www.npmjs.com/package/@kaushalrathour/react-native-starter)c3a69%3BSampled%3D0&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAZWGGEKHDQUS7FA4W%2F20250807%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20250807T095126Z&amp;X-Amz-Expires=3600&amp;X-Amz-Signe
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **Professional-grade foundation for React Native apps**  
@@ -14,6 +14,9 @@
 ```bash
 # Create production-ready app in 30 seconds
 npx @kaushalrathour/react-native-starter MyAwesomeApp
+
+# with custom package name
+npx @kaushalrathour/react-native-starter MyAwesomeApp com.orgname.myawesomeapp
 ```
 
 **Real results from actual users:**  
@@ -40,7 +43,7 @@ npx @kaushalrathour/react-native-starter MyApp
 
 2. **Install dependencies**:
 ```bash
-cd MyApp && npx pod-install
+cd MyAwesomeApp && npx pod-install
 ```
 
 3. **Launch**:
@@ -49,20 +52,7 @@ npx react-native run-ios     # iOS
 npx react-native run-android # Android
 ```
 
-## 🛠️ Pre-Configured Ecosystem
 
-```javascript
-// Example: Pre-built Redux Store
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './slices';
-
-export default configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware({ serializableCheck: false }),
-  devTools: __DEV__,
-});
-```
 
 ### 📂 Intelligent Project Structure
 ```
@@ -117,6 +107,48 @@ const styles = StyleSheet.create({
 ✅ **Tested** with React Native 0.72+  
 ✅ **Regularly updated** dependencies  
 ✅ **Commercial project** proven  
+
+## 🔧 Troubleshooting
+
+### Pod Install Issues (iOS)
+
+**Problem**: `Unable to find a specification for RNWorklets depended upon by RNReanimated`
+
+**Solution**: This template uses `react-native-reanimated@3.19.0` to prevent this issue. If you still encounter problems:
+
+```bash
+# Method 1: Update pod repos
+cd ios && pod install --repo-update
+
+# Method 2: Clean and reinstall
+cd ios && rm -rf Pods Podfile.lock && pod install
+
+# Method 3: Reset pod cache
+pod cache clean --all && pod install
+```
+
+**Why this happens**: Newer versions of `react-native-reanimated` depend on `RNWorklets`, but dependency resolution can fail. Our template pins to a stable version.
+
+### Common npm Install Errors
+
+```bash
+# ❌ Wrong syntax
+npm install "react-native-reanimated": "^3.19.0"
+
+# ✅ Correct syntax  
+npm install react-native-reanimated@3.19.0
+```
+
+### Metro Bundle Issues
+
+```bash
+# Reset Metro cache
+npx react-native start --reset-cache
+
+# Clean build folders
+cd android && ./gradlew clean && cd ..
+cd ios && xcodebuild clean && cd ..
+```
 
 ## 🤝 Contribute & Grow
 
