@@ -15,8 +15,8 @@ export const getStyling = (colors: AppColors) => {
       color: colors.textPrimary,
     },
     subHeading: {
-        fontFamily: `${FontSize.medium}@s`,
-        color: colors.secondary
+      fontSize: `${FontSize.medium}@s`,
+      color: colors.secondary
     }
   });
 };
