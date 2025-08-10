@@ -1,6 +1,6 @@
 {
   "name": "@kaushalrathour/react-native-starter",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Bootstrap a custom React Native app with predefined template and dependencies",
   "bin": {
     "create-rn-starter": "./bin/index.js"
